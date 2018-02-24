@@ -40,7 +40,6 @@ class RedisHelper @Inject()(aSys: ActorSystem) {
 
   def init {
     redis = new SentinelMonitoredRedisClient(Seq(("localhost", 26179), ("localhost", 26381)), "redis-cluster")
-    redis.ping()
   }
 
   def save(key: String, value: Any): Future[Boolean] = {
