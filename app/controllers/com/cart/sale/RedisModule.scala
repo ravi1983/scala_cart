@@ -1,22 +1,21 @@
 package controllers.com.cart.sale
 
+import javax.inject.Inject
+
 import com.cart.sale.util.RedisHelper
-import com.google.inject.matcher.Matchers
-import com.google.inject.spi.{InjectionListener, TypeEncounter, TypeListener}
-import com.google.inject.{AbstractModule, TypeLiteral}
+import com.google.inject.AbstractModule
+import play.api.Logger
 
 class RedisModule extends AbstractModule {
-  override def configure(): Unit = {
-    println("******************** HERE ****************")
-    bindListener(Matchers.only(classOf[RedisHelper]), new TypeListener {
-      override def hear[I](`type`: TypeLiteral[I], encounter: TypeEncounter[I]): Unit = {
-        encounter.register(new InjectionListener[I] {
-          override def afterInjection(injectee: I): Unit = {
-            val rh = injectee.asInstanceOf[RedisHelper]
-            rh.init
-          }
-        })
-      }
-    })
+
+  private val log = Logger(getClass)
+
+  def configure(): Unit = {
+    requestInjection(this)
+  }
+
+  @Inject
+  def initRedisHelper(instance: RedisHelper): Unit = {
+    instance.init
   }
 }
