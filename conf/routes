@@ -1,0 +1,8 @@
+PUT           /cart            controllers.com.cart.sale.CartController.create
+
+#POST          /cart/:id        controllers.com.cart.sale.CartController.addItem(id: java.util.UUID)
+#
+#GET           /cart/:id        controllers.com.cart.sale.CartController.get(id: java.util.UUID)
+#
+#POST          /cart/:id        controllers.com.cart.sale.CartController.deleteItem(id: java.util.UUID)
+#DELETE        /cart/:id        controllers.com.cart.sale.CartController.delete(id: java.util.UUID)
