@@ -30,7 +30,7 @@ class CartServiceActor @Inject()(in: Injector) extends Actor with ActorLogging {
   }
 
   def createCart(items: Option[Seq[String]]) = {
-    log.info(s"Creating cart with items $items and $this")
+    log.info(s"Creating cart with items $items")
 
     val origSender = sender
     val future = cpa ? CreateCart(items)
