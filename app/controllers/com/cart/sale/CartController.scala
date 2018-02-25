@@ -25,7 +25,7 @@ class CartController @Inject()(aSys: ActorSystem, in: Injector) extends Injected
   def create = Action.async(parse.json) {
     request =>
       val body = request.body
-      val item = (body \ "id").as[Seq[String]] // TODO Change to asOpt
-      (csa ? CreateCartUI(item)).map { case cart: CartUI => Ok(Json.toJson(cart)) }
+      val item = (body \ "id").asOpt[Seq[String]]
+      (csa ? CreateCartUI(item)).map { case data: CartUI => Ok(Json.toJson(data)) }
   }
 }

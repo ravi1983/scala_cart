@@ -14,9 +14,9 @@
 
     <logger name="play" level="INFO"/>
     <logger name="application" level="DEBUG"/>
-    <logger name="application" level="DEBUG"/>
     <logger name="controllers" level="DEBUG"/>
     <logger name="com.cart" level="DEBUG"/>
+    <logger name="akka.event.slf4j.Slf4jLogger" level="DEBUG"/>
 
     <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF"/>
 

@@ -14,7 +14,7 @@ object CachedPersistenceCartActor {
 
   def props(in: Injector): Props = Props.create(classOf[CachedPersistenceCartActor], in)
 
-  case class CreateCart(items: Seq[String])
+  case class CreateCart(items: Option[Seq[String]])
 
 }
 
@@ -28,11 +28,20 @@ class CachedPersistenceCartActor @Inject()(in: Injector) extends Actor {
     case CreateCart(items) =>
       log.info("Creating cart...")
 
-      val cis = items.map(ci => CartItem(ci, Price("0.00"))).seq
-      val cart = Cart(UUID.randomUUID(), Some(cis))
-      log.debug(s"Cart to be stored is $cart")
+      items match {
+        case item: Some[Seq[String]] =>
+          val cis = item.get.map(ci => CartItem(ci, Price("0.00"))).seq
+          val cart = Cart(UUID.randomUUID(), Some(cis))
+          processCart(cart)
+        case _ =>
+          val cart = Cart(UUID.randomUUID())
+          processCart(cart)
+      }
 
-      rh.save(UUID.randomUUID().toString, cart)
-      sender ! cart
+      def processCart(cart: Cart) = {
+        log.debug(s"Cart to be stored is $cart")
+        rh.save(cart.id.toString, cart)
+        sender ! cart
+      }
   }
 }
