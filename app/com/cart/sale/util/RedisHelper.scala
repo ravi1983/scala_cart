@@ -18,13 +18,13 @@ class RedisHelper @Inject()(aSys: ActorSystem) {
   private val log = Logger(getClass)
   var redis: SentinelMonitoredRedisClient = _
 
-  implicit val akkaSystem = aSys
+  implicit val akkaSystem: ActorSystem = aSys
   implicit val serString: ByteStringSerializer[String] = (data: String) => ByteString(data)
   implicit val serAny: ByteStringSerializer[Any] = (data: Any) => ByteString(Json.toJson(data).asText())
   implicit val deSerAny: ByteStringDeserializer[Cart] = (bs: ByteString) => Json.fromJson[Cart](Json.parse(bs.utf8String), classOf[Cart])
 
   def init {
-    redis = new SentinelMonitoredRedisClient(Seq(("localhost", 26179), ("localhost", 26381)), "redis-cluster")
+    redis = SentinelMonitoredRedisClient(Seq(("localhost", 26179), ("localhost", 26381)), "redis-cluster")
   }
 
   def save(key: String, value: Any): Future[Boolean] = {
