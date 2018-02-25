@@ -1,5 +1,6 @@
 package com.cart.sale.actor
 
+import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
 import akka.actor.{Actor, ActorLogging, Props}
@@ -33,15 +34,14 @@ class CartServiceActor @Inject()(in: Injector) extends Actor with ActorLogging {
     log.info(s"Creating cart with items $items")
 
     val origSender = sender
-    val future = cpa ? CreateCart(items)
-    future.map {
+    (cpa ? CreateCart(items)).map {
       case c: Cart =>
-        if (c.items.nonEmpty) {
-          val cui = c.items.get.map(ci => CartItemUI(ci.id, PriceUI("0.00"))).seq
-          log.info(s"Created cart is $cui")
-          origSender ! CartUI(c.id, cui)
-        } else {
-          origSender ! CartUI(c.id)
+        c.items match {
+          case item: Some[Seq[CartItem]] =>
+            val cui = item.get.map(ci => CartItemUI(ci.id, PriceUI("0.00"))).seq
+            log.info(s"Created cart is $cui")
+            origSender ! CartUI(c.id, cui)
+          case _ => origSender ! CartUI(c.id)
         }
       case _ => log.error("Something happened...")
     }
