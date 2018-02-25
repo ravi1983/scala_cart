@@ -12,6 +12,7 @@ import com.cart.sale.model._
 import com.google.inject.Injector
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 object CartServiceActor {
 
@@ -40,9 +41,13 @@ class CartServiceActor @Inject()(in: Injector) extends Actor with ActorLogging {
             val cui = item.get.map(ci => CartItemUI(ci.id, PriceUI("0.00"))).seq
             log.info(s"Created cart is $cui")
             origSender ! CartUI(c.id, cui)
+            cui
           case _ => origSender ! CartUI(c.id)
         }
       case _ => log.error("Something happened...")
+    }.onComplete { // To track if the future ended in success or failure
+      case Success(value) => log.debug(s"Successfully completed processing for $value")
+      case Failure(e) => log.error(s"Something bad ${e.getMessage}", e)
     }
   }
 }
