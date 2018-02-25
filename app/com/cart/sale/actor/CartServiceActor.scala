@@ -1,6 +1,5 @@
 package com.cart.sale.actor
 
-import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
 import akka.actor.{Actor, ActorLogging, Props}
