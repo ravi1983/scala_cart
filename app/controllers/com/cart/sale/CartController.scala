@@ -8,7 +8,6 @@ import com.cart.sale._
 import com.cart.sale.actor.CartServiceActor.CreateCartUI
 import com.cart.sale.model.CartUI
 import com.google.inject.Injector
-import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.InjectedController
 
@@ -16,13 +15,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class CartController @Inject()(aSys: ActorSystem, in: Injector, @Named("csActor") ca: ActorRef) extends InjectedController {
 
-  private val log = Logger(getClass)
-
   def create = Action.async(parse.json) {
     request =>
       val body = request.body
       val item = (body \ "id").asOpt[Seq[String]]
-      println(s"Cart actor is $ca")
       (ca ? CreateCartUI(item)).map { case data: CartUI => Ok(Json.toJson(data)) }
   }
 }
