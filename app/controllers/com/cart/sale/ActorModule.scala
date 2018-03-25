@@ -19,4 +19,12 @@ class ActorModule extends AbstractModule {
     val as = injector.getInstance(classOf[ActorSystem])
     as.actorOf(RoundRobinPool(3).props(CartServiceActor.props(injector)), "Cart-Actor-Router")
   }
+
+  @Singleton
+  @Provides
+  @Named("addToCartActor")
+  def crateAddToCartActor(injector: Injector): ActorRef = {
+    val as = injector.getInstance(classOf[ActorSystem])
+    as.actorOf(RoundRobinPool(5).props(CartServiceActor.props(injector)), "Add-To-Cart-Actor-Router")
+  }
 }
