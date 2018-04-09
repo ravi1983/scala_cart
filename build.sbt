@@ -1,12 +1,11 @@
-name := "scala-cart"
-
-version := "0.1"
-
-scalaVersion := "2.12.4"
-
-lazy val `scala-cart` = (project in file(".")).enablePlugins(PlayScala)
-
-scalaVersion := "2.12.4"
+lazy val `scala-cart` = (project in file("."))
+  .enablePlugins(PlayScala)
+  .settings(
+    name := "scala-cart",
+    organization := "com.tamil.pos",
+    version := "1.0",
+    scalaVersion := "2.12.4"
+  )
 
 resolvers += "chrisdinn" at "http://chrisdinn.github.io/releases/"
 

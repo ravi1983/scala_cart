@@ -26,7 +26,6 @@ object CartServiceActor {
 class CartServiceActor @Inject()(in: Injector) extends Actor with ActorLogging {
   private val cpa = context.actorOf(RoundRobinPool(2).props(CachedPersistenceCartActor.props(in)), "persistence_router")
 
-
   override def receive = {
     case CreateCartUI(items) => createCart(items)
   }
